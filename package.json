@@ -1,0 +1,19 @@
+{
+  "name": "organic-express-response",
+  "version": "0.0.0",
+  "description": "Organelle for adding default response to incoming requests as expressjs middleware.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/outbounder/organic-express-response.git"
+  },
+  "author": "Boris Filipov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/outbounder/organic-express-response/issues"
+  },
+  "homepage": "https://github.com/outbounder/organic-express-response"
+}
