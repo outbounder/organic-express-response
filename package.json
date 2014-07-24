@@ -1,6 +1,6 @@
 {
   "name": "organic-express-response",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Organelle for adding default response to incoming requests as expressjs middleware.",
   "main": "index.js",
   "scripts": {

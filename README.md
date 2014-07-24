@@ -41,7 +41,7 @@ The middleware
 
 Optionally the middleware 
 
-  * intercepts errors from the request - response chain and sends them as response in case they define `response error properties` 
+  * intercepts errors/exceptions from the request - response chain and sends them as response in case they define `response error properties` 
     * or pass the control flow to followup error middleware functions.
 
 ## response properties
