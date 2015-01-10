@@ -2,35 +2,57 @@
 
 Organelle for adding default response to incoming requests as expressjs middleware.
 
-## live usage
+## usage with organic-express-routes
 
+    module.exports = function(){
+      return {
+        "GET": function(req, res, next) {
+          res.template = "landing"
+          next()
+        },
+        "POST": function(req, res, next) {
+          res.body = {success: true}
+          next()
+        },
+        "PUT": function(req, res, next) {
+          var not_implemented_error = new Error()
+          not_implemented_error.code = 400
+          not_implemented_error.body = "not implemented"
+          next(not_implemented_error)
+        }
+      }
+    }
+
+## usage with plain express
+
+    // given the express app
     var app = express()
 
+    // construct express response middleware instance
     var plasma = new (require("organic-plasma"))()
     require("organic-express-response")(plasma, {reactOn: "ExpressServer"})
+
+    // and attach it to express app
     plasma.emit({type: "ExpressServer", data: app})
 
+    // respond with template
     app.get("/", function(req, res, next){
       res.template = "landing"
       next()
     })
+
+    // respond with raw json data
     app.post("/data", function(req, res, next){
-      res.response = {success: true}
+      res.body = {success: true}
       next()
     })
+
+    // respond with custom error
     app.get("/failing/route", function(req, res, next){
       var errorFound = new Error()
       errorFound.code = 400
-      errorFound.response = "missing argument"
+      errorFound.body = "missing argument"
       next(errorFound)
-    })
-    app.put("/update", function(req, res, next){
-      if(!req.body) return next(missingBodyError)
-      some_store.update(req.body, function(err, data){
-        if(err) return next(err)
-        res.response = data
-        next()
-      })
     })
 
 The middleware 
@@ -50,9 +72,10 @@ Optionally the middleware
 
 Does `res.render(res.template)`
 
-### `res.response`
+### `res.body`
+#### alias `res.response`
 
-Sends `res.response` data either to `json` or `send` express res methods.
+Sends `res.body` data either to `json` or `send` express res methods.
 
 ### `res.code`
 
@@ -64,9 +87,10 @@ Sets `res.status`
 
 Does `res.render(err.template)`
 
-### `err.response`
+### `err.body`
+#### alias `err.response`
 
-Sends `err.response` data either to `json` or `send` express res methods.
+Sends `err.body` data either to `json` or `send` express res methods.
 
 ### `err.code`
 
@@ -77,24 +101,29 @@ Sets `res.status`
     {
       "source": "node_modules/organic-express-response",
       "reactOn": "ExpressServer",
+
+
+      "skipErrorResponses": false,
+
+      "defaultNextRoute": undefined,
+      "skipDefaultResponse": true,
       "defaultCode": 404,
       "defaultTemplate": undefined,
-      "defaultResponse": "not found",
-      "skipDefaultResponse": false,
-      "defaultNextRoute": undefined,
-      "skipErrorResponses": false,
+      "defaultBody": "not found",
+
+      "skipDefaultErrorResponse": true
       "defaultErrorCode": 500,
-      "defaultErrorResponse": "error found",
-      "skipDefaultErrorResponse": false
+      "defaultErrorBody": "error found",
+      
     }
 
 ### `reactOn` property
 
 Should be either `ExpressServer` chemical with [expected structure](https://github.com/outbounder/organic-express-server#emitready-chemical) or array of chemicals where the first one is mapped as `ExpressServer` chemical.
 
-### `defaultCode`, `defaultTemplate`, `defaultResponse` properties
+### `defaultCode`, `defaultTemplate`, `defaultBody` properties
 
-All specify what is the default response if `response properties` where not found. If `defaultTemplate` is provided then it will be used instead of `defaultResponse`.
+All specify what is the default response if `response properties` where not found. If `defaultTemplate` is provided then it will be used instead of `defaultBody`.
 
 ### `skipDefaultResponse`, `defaultNextRoute` properties
 
@@ -104,7 +133,7 @@ Optional, if set to `true` default response will not be triggered and the middle
 
 Optional, if set to `true` will not send default error response
 
-### `defaultErrorCode`, `defaultErrorResponse` properties
+### `defaultErrorCode`, `defaultErrorBody` properties
 
 All specify what is the default error response code and data when error has been found but it is missing `error response properties`
 

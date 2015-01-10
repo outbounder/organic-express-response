@@ -3,12 +3,15 @@ var path = require("path")
 var create404 = function(dna){
   var err = new Error()
   err.code = dna.defaultCode || 404
-  err.response = dna.defaultResponse || "not found"
+  err.body = dna.defaultBody || "not found"
   err.template = dna.defaultTemplate
   return err
 }
 
 module.exports = function(plasma, dna) {
+  dna.skipDefaultErrorResponse = dna.skipDefaultErrorResponse || true
+  dna.skipDefaultResponse = dna.skipDefaultResponse || true
+
   plasma.on(dna.reactOn || "ExpressServer", function(c){
     var app = c.data || c[0].data;
     app.use(function(req, res, next){
@@ -19,11 +22,11 @@ module.exports = function(plasma, dna) {
       if(res.template)
         return res.render(res.template)
       
-      if(res.response) {
+      if(res.response || res.body) {
         if(req.accepts("json") == "json")
-          return res.json(res.response)
+          return res.json(res.response || res.body)
         else
-          return res.send(res.response)
+          return res.send(res.response || res.body)
       }
 
       if(!dna.skipDefaultResponse)
@@ -39,16 +42,16 @@ module.exports = function(plasma, dna) {
         if(err.template)
           return res.render(err.template)
         
-        if(err.response) {
+        if(err.response || err.body) {
           if(req.accepts("json") == "json")
-            return res.json(err.response)
+            return res.json(err.response || err.body)
           else
-            return res.send(err.response)
+            return res.send(err.response || err.body)
         }
 
         if(!dna.skipDefaultErrorResponse) {
           res.status(dna.defaultErrorCode || 500)
-          res.send(dna.defaultErrorResponse || "error found")
+          res.send(dna.defaultErrorBody || "error found")
         } else
           next(err)
       })
