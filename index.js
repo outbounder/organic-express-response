@@ -22,7 +22,7 @@ module.exports = function(plasma, dna) {
       if(res.template)
         return res.render(res.template)
 
-      if(typeof res.response != "undefined" || res.body != "undefined") {
+      if(typeof res.response != "undefined" || typeof res.body != "undefined") {
         if(req.accepts("json") == "json")
           return res.json(res.response || res.body)
         else
@@ -42,7 +42,7 @@ module.exports = function(plasma, dna) {
         if(err.template)
           return res.render(err.template)
 
-        if(typeof err.response != "undefined" || err.body != "undefined") {
+        if(typeof err.response != "undefined" || typeof err.body != "undefined") {
           if(req.accepts("json") == "json")
             return res.json(err.response || err.body)
           else
