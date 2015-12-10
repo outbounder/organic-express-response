@@ -1,4 +1,4 @@
-# organic-express-response
+# organic-express-response v0.0.3
 
 Organelle for adding default response to incoming requests as expressjs middleware.
 
@@ -55,15 +55,15 @@ Organelle for adding default response to incoming requests as expressjs middlewa
       next(errorFound)
     })
 
-The middleware 
+The middleware
 
- * intercepts all requests and sends them as response in case they define `response properties` 
+ * intercepts all requests and sends them as response in case they define `response properties`
    * or responds with defaults if configured to do so
    * or pass the control flow to followup middleware functions if configured to do so
 
-Optionally the middleware 
+Optionally the middleware
 
-  * intercepts errors/exceptions from the request - response chain and sends them as response in case they define `response error properties` 
+  * intercepts errors/exceptions from the request - response chain and sends them as response in case they define `response error properties`
     * or pass the control flow to followup error middleware functions.
 
 ## response properties
@@ -114,7 +114,7 @@ Sets `res.status`
       "skipDefaultErrorResponse": true
       "defaultErrorCode": 500,
       "defaultErrorBody": "error found",
-      
+
     }
 
 ### `reactOn` property
@@ -129,7 +129,7 @@ All specify what is the default response if `response properties` where not foun
 
 Optional, if set to `true` default response will not be triggered and the middleware will call `next(defaultNextRoute)` instead.
 
-### `skipDefaultErrorResponse` 
+### `skipDefaultErrorResponse`
 
 Optional, if set to `true` will not send default error response
 
