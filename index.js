@@ -15,14 +15,14 @@ module.exports = function(plasma, dna) {
   plasma.on(dna.reactOn || "ExpressServer", function(c){
     var app = c.data || c[0].data;
     app.use(function(req, res, next){
-      
-      if(res.code)
+
+      if(typeof res.code == "number")
         res.status(res.code)
-      
+
       if(res.template)
         return res.render(res.template)
-      
-      if(res.response || res.body) {
+
+      if(typeof res.response != "undefined" || typeof res.body != "undefined") {
         if(req.accepts("json") == "json")
           return res.json(res.response || res.body)
         else
@@ -36,13 +36,13 @@ module.exports = function(plasma, dna) {
     })
     if(!dna.skipErrorResponses)
       app.use(function(err, req, res, next){
-        if(err.code)
+        if(typeof err.code == "number")
           res.status(err.code)
-        
+
         if(err.template)
           return res.render(err.template)
-        
-        if(err.response || err.body) {
+
+        if(typeof err.response != "undefined" || typeof err.body != "undefined") {
           if(req.accepts("json") == "json")
             return res.json(err.response || err.body)
           else
